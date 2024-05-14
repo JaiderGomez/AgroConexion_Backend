@@ -1,4 +1,4 @@
-import mongoose, { model } from "mongoose";
+const mongoose = require("mongoose");
 
 const publicacionesSchema = new mongoose.Schema({
     nombre_del_producto:
@@ -81,6 +81,4 @@ const publicacionesSchema = new mongoose.Schema({
    
 });
 
-const publicacionesModel = mongoose.model('publicaciones', publicacionesSchema);
-
-export default publicacionesModel;
+module.exports=mongoose.model('publicaciones', publicacionesSchema);

@@ -1,18 +1,17 @@
-import publicaciones from "./model/publicaciones.js"
+const publicaciones = require("../models/publicacionesModel");
 
-/*/Consultar publicaciones
 
-exports.getPublicaciones = async (req, res, next) =>{
+exports.getPublicaciones = async (req, res, next) => {
     const getPublicaciones = await publicaciones.find();
 
     res.status(200).json({
         success: true,
         getPublicaciones
     })
-
 }
 
-//Crear una nueva publicacion
+
+/*/Crear una nueva publicación
 exports.newPublicacion = catchAsyncErrors(async (req, res, next) => {
     const newPost = 
     {
