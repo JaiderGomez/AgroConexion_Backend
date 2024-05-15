@@ -28,7 +28,8 @@ exports.getPublicacionID = catchAsyncErrors(async (req, res, next) => {
     const publicacionID = await publicaciones.findById(req.params.id); //Realizo consulta a la base de datos y guardo en publicacionID
     if (!publicacionID) {
         return next(new ErrorHandler("Publicacion no encontrado", 404))
-    }
+    };// Verifico que la publicacion exista
+
     res.status(200).json({
         success: true,
         message: "Aquí debajo encuentras información sobre tu publicacion: ",
@@ -83,21 +84,20 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
         product
     })
 })
+*/
 
+//Eliminar una publicacion
+exports.deletePublicacion = catchAsyncErrors(async (req, res, next) => {
+    const getPublicacion = await publicaciones.findById(req.params.id) //Variable para consultar la publicacion
 
-//Eliminar un producto
-exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
-    const product = await producto.findById(req.params.id) //Variable de tipo modificable
+    if (!getPublicacion) {
+        return next(new ErrorHandler("Publicacion no encontrado", 404))
+    }// Verifico que la publicacion exista
 
-    if (!product) {
-        return next(new ErrorHandler("Producto no encontrado", 404))
-    }
-
-    await product.remove();//Eliminamos el proceso
+    await publicaciones.findByIdAndDelete(getPublicacion.id); //Elimino la publicacion
     res.status(200).json({
         success: true,
-        message: "Producto eliminado correctamente"
+        message: "Publicacion eliminada correctamente"
     })
 })
 
-*/
