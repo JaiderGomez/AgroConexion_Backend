@@ -2,6 +2,16 @@ const publicaciones = require("../models/publicacionesModel");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler=require ("../utils/errorHandler")
 
+//Crear una nueva publicación
+exports.newPublicacion = catchAsyncErrors(async (req, res, next) => {
+    const newPost = await publicaciones.create(req.body);
+    res.status(201).json({
+        success: true,
+        message: "Publicacion creada correctamente",
+        newPost
+    })
+});
+
 //Consultar publicaciones
 exports.getPublicaciones = catchAsyncErrors( async (req, res, next) => {
     const getPublicaciones = await publicaciones.find(); //Realizo consulta a la base de datos y guardo en getPublicaciones
@@ -12,16 +22,6 @@ exports.getPublicaciones = catchAsyncErrors( async (req, res, next) => {
     })// Respuesta a la petición
 });
 
-
-//Crear una nueva publicación
-exports.newPublicacion = catchAsyncErrors(async (req, res, next) => {
-    const newPost = await publicaciones.create(req.body);
-    res.status(201).json({
-        success: true,
-        message: "Publicacion creada correctamente",
-        newPost
-    })
-});
 
 //Consultar Publicacion por ID
 exports.getPublicacionID = catchAsyncErrors(async (req, res, next) => {
