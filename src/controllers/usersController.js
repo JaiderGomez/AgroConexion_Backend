@@ -39,10 +39,9 @@ exports.getUsuario=catchAsyncErrors(async (req, res, next) => {
 //Consultar Usuario por Rol
 exports.getUserRol=catchAsyncErrors(async (req, res, next) => {
     const usersRol = await usuarios.find({'rol': req.params.rol});
-    if (!usersRol) {
+    if (usersRol.length === 0) {
         return next(new ErrorHandler("Usuarios no encontrados", 404))
     };
-
     res.status(200).json({
         success:true,
         usersRol,
