@@ -1,6 +1,6 @@
 const publicaciones = require("../models/publicacionesModel");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const ErrorHandler=require ("../utils/errorHandler")
+const ErrorHandler=require("../utils/errorHandler");
 
 //Crear una nueva publicación
 exports.newPublicacion = catchAsyncErrors(async (req, res, next) => {
@@ -27,7 +27,7 @@ exports.getPublicaciones = catchAsyncErrors( async (req, res, next) => {
 exports.getPublicacionID = catchAsyncErrors(async (req, res, next) => {
     const publicacionID = await publicaciones.findById(req.params.id); //Realizo consulta a la base de datos y guardo en publicacionID
     if (!publicacionID) {
-        return next(new ErrorHandler("Publicacion no encontrado", 404))
+        return next(new ErrorHandler("Publicacion no encontrada", 404))
     };// Verifico que la publicacion exista
 
     res.status(200).json({
