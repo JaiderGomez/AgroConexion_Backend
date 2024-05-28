@@ -5,11 +5,11 @@ const {getPublicaciones, newPublicacion, getPublicacionID, deletePublicacion, up
 
 
 
-router.get("/Publicaciones", getPublicaciones) //Ruta Consultar Publicaciones
-      .post("/CrearPublicacion", newPublicacion) //Ruta Crear Publicacion
-      .get("/Publicacion/:id", getPublicacionID) //Ruta para Consultar Publicacion por ID
-      .delete("/Publicacion/:id", deletePublicacion) //Ruta para eliminar una  Publicacion por ID
-      .patch("/Publicacion/:id", updatePublicacion) //Ruta para Actualizar una  Publicacion por ID
+router.get("/publicaciones", getPublicaciones) //Ruta Consultar Publicaciones
+      .post("/crearPublicacion", newPublicacion) //Ruta Crear Publicacion
+      .get("/publicacion/:id", getPublicacionID) //Ruta para Consultar Publicacion por ID
+      .delete("/publicacion/:id", deletePublicacion) //Ruta para eliminar una  Publicacion por ID
+      .patch("/publicacion/:id", updatePublicacion) //Ruta para Actualizar una  Publicacion por ID
 
  
 

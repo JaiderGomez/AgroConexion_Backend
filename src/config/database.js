@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
 
-const mongoUrl = "mongodb://localhost:27017/agroconexion";
-
 const connectDatabase = () => {
-    mongoose.connect(mongoUrl)
+    mongoose.connect(process.env.DB_LOCAL_URI)
     .then(con => {
         console.log(`Base de datos mongo conectada con el servidor: ${con.connection.host}`)
     }).catch(con => {

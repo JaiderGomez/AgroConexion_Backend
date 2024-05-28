@@ -1,22 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const connectDatabase = require("./database/database.js");
+
+//Importo rutas
 const rutasPublicaciones = require("./routes/publicacionesRutas.js");
 const rutasUsuarios = require("./routes/usuariosRutas.js")
 
-//Conectar base de datos Mongo
-connectDatabase();
-
-
-//Servidor
+//Express
 const app = express();
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
 
+//Setting archivo de configuración
+if(process.env.NODE_ENV!=="PRODUCTION") require('dotenv').config({path:'src/config/config.env'})
 
 app.use(bodyParser.json());
 
-//Rutas
+//Rutas Api
 app.use('/api', rutasPublicaciones, rutasUsuarios);
 
 
+module.exports=app;
