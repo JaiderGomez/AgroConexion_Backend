@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const jwt= require("jsonwebtoken");
+const bcrypt = require("bcryptjs")
 
 const usersSchema = new mongoose.Schema({
     clave:{
@@ -69,5 +71,20 @@ const usersSchema = new mongoose.Schema({
 
 
 });
+
+
+//Encripto contraseña antes de guardarla
+usersSchema.pre("save", async function (next) {
+    if (!this.isModified("clave")) {
+        next()
+    }
+    this.clave = await bcrypt.hash(this.clave, 10)
+})
+
+//Decodifico contraseñas y comparamos
+usersSchema.methods.compararPass = async function (passDada){
+    return await bcrypt.compare(passDada, this.clave)
+}
+
 
 module.exports=mongoose.model('users', usersSchema);
