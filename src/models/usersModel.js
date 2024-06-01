@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const jwt= require("jsonwebtoken");
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const validator = require("validator");
 
 const usersSchema = new mongoose.Schema({
     clave:{
@@ -25,8 +26,8 @@ const usersSchema = new mongoose.Schema({
     email:{
         type:String,
         require:[true, "Por favor ingrese su correo electrónico"],
-        maxLength:[80, "Máximo 80 caracteres"],
-
+        unique:true,
+        validate: [validator.isEmail, "Por favor ingrese un email valido"]
     },
     departamento:{
         type:String,
@@ -84,6 +85,14 @@ usersSchema.pre("save", async function (next) {
 //Decodifico contraseñas y comparamos
 usersSchema.methods.compararPass = async function (passDada){
     return await bcrypt.compare(passDada, this.clave)
+}
+
+
+//Retornar un JWT token
+usersSchema.methods.getJwtToken = function () {
+    return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_TIEMPO_EXPIRACION
+    })
 }
 
 

@@ -1,16 +1,13 @@
 const usuarios = require("../models/usersModel");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler=require("../utils/errorHandler");
-
+const tokenEnviado = require("../utils/jwtToken");
 
 //Crear un usuarios
 exports.newUsers=catchAsyncErrors(async (req, res, next) => {
     const newUser = await usuarios.create(req.body);
-    res.status(201).json({
-        success: true,
-        message: "Usuario creado correctamente",
-        newUser
-    })
+    
+    tokenEnviado(newUser,201,res)
 });
 
 //consultar todos los usuarios
@@ -72,6 +69,7 @@ exports.updateUsers=catchAsyncErrors(async (req, res, next) =>{
 });
 
 
+//Eliminar usuarios
 exports.deleteUser=catchAsyncErrors( async (req, res, next) => {
     const usuario = await usuarios.findById(req.params.id);
     if (!usuario) {
@@ -84,6 +82,32 @@ exports.deleteUser=catchAsyncErrors( async (req, res, next) => {
         success: true,
         message: "Usuario eliminado correctamente"
     })
+
+})
+
+//Iniciar Sesión - Login
+exports.loginUser = catchAsyncErrors(async(req, res, next)=>{
+    const { email, password} =  req.body;
+
+    //revisar que los campos están completos
+    if (!email || !password){
+        return next(new ErrorHandler("Por favor ingrese email & Contraseña", 400))
+    }
+
+    //Buscar al usuario en base de datos
+    const user = await usuarios.findOne({email}).select("+clave")
+    if(!user){
+        return next(new ErrorHandler("Email o contraseña inválidos", 401))
+    }
+
+    //Comparar contraseñas, verificar si está bien
+    const contrasenaOK = await user.compararPass(password);
+
+    if (!contrasenaOK){
+        return next(new ErrorHandler("Contraseña invalida",401))
+    }
+
+    tokenEnviado(user,200,res)
 
 })
 

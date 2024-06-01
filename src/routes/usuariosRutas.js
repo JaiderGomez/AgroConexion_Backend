@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getUsuarios, newUsers, getUsuario, getUserRol, updateUsers, deleteUser} = require("../controllers/usersController");
+const {getUsuarios, newUsers, getUsuario, getUserRol, updateUsers, deleteUser, loginUser} = require("../controllers/usersController");
 
 
 
@@ -11,6 +11,7 @@ router.get("/usuarios", getUsuarios) //Consultar todos los usuarios
       .patch("/usuario/:id", updateUsers) //Actualizar usuario
       .get("/usuarios/:rol", getUserRol)// Consultar Usuarios por rol
       .delete("/usuario/:id", deleteUser)// Eliminar Usuario
+      .post("/login", loginUser)//Login Usuario
 
 
 
