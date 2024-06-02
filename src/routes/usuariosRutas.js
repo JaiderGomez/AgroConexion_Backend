@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getUsuarios, newUsers, getUsuario, getUserRol, updateUsers, deleteUser, loginUser, logOut, forgotPassword} = require("../controllers/usersController");
+const {getUsuarios, newUsers, getUsuario, getUserRol, updateUsers, deleteUser, loginUser, logOut, forgotPassword, resetPassword} = require("../controllers/usersController");
 
 
 
@@ -14,6 +14,7 @@ router.get("/usuarios", getUsuarios) //Consultar todos los usuarios
       .post("/login", loginUser)//Login Usuario
       .get("/logout", logOut)//Cerrar Sesión
       .post("/recuperarclave", forgotPassword)//Recuperar Contraseña
+      .post("/cambiodeclave/:token", resetPassword)//Cambio de  Contraseña
       
 
 

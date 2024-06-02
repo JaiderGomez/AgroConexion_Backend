@@ -3,6 +3,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler=require("../utils/errorHandler");
 const tokenEnviado = require("../utils/jwtToken");
 const sendEmail=require("../utils/sendEmail");
+const crypto = require("crypto");
 
 //Crear un usuarios
 exports.newUsers=catchAsyncErrors(async (req, res, next) => {
@@ -128,23 +129,26 @@ exports.logOut = catchAsyncErrors(async(req, res, next)=>{
 
 //Olvide mi contraseña, recuperar contraseña
 exports.forgotPassword = catchAsyncErrors ( async( req, res, next) =>{
-    const user= await usuarios.findOne({email: req.body.email});
+    const user= await usuarios.findOne({email: req.body.email}); //Busco el usuario por el email que he recibí desde el cuerpo de la petición
 
     if (!user){
         return next(new ErrorHandler("Usuario no se encuentra registrado", 404))
     }
-    const resetToken= user.genResetPasswordToken();
     
-    await user.save({validateBeforeSave: false})
+    const resetToken=user.genResetPasswordToken(); //Genero el token
+    
+    await user.save({validateBeforeSave: false}) //Guardo el token en la Base de datos
 
     //Crear una url para hacer el reset de la contraseña
-    const resetUrl= `${req.protocol}://${req.get("host")}/resetPassword/${resetToken}`;
+    const resetUrl= `${req.protocol}://${req.get("host")}/api/cambiodeclave/${resetToken}`;
 
+    //Correo que le voy enviar al usuario
     const mensaje=`Hola!\n\nTu link para ajustar una nueva contraseña es el 
     siguiente: \n\n${resetUrl}\n\n
     Si no solicitaste este link, por favor comunícate con soporte.\n\n Att:\nJaider Gomez`
 
     try{
+        //Con la función sendEmail(): envió el correo al usuario
         await sendEmail({
             email:user.email,
             subject: "AgroConexión Recuperación de contraseña",
@@ -152,7 +156,8 @@ exports.forgotPassword = catchAsyncErrors ( async( req, res, next) =>{
         })
         res.status(200).json({
             success:true,
-            message: `Correo enviado a: ${user.email}`
+            message: `Correo enviado a: ${user.email}`,
+
         })
     }catch(error){
         user.resetPasswordToken=undefined;
@@ -161,6 +166,37 @@ exports.forgotPassword = catchAsyncErrors ( async( req, res, next) =>{
         await user.save({validateBeforeSave:false});
         return next(new ErrorHandler(error.message, 500))
     }
+});
+
+//Cambio de contraseña
+exports.resetPassword = catchAsyncErrors(async (req,res,next) =>{
+    
+    //Hash el token que llego con la URl
+    const resetPasswordToken=crypto.createHash("sha256").update(req.params.token).digest("hex");
+    
+    //Buscar al usuario al que le vamos a cambia la contraseña (Se busca por medio del token)
+    const user= await usuarios.findOne({
+        resetPasswordToken,
+        resetPasswordExpire:{$gt: Date.now()} //Verifico que el token no este expirado
+    })
+
+    //El usuario si esta en la base de datos?
+    if(!user){
+        return next(new ErrorHandler("El token es invalido o ya expiró",400))
+    }
+
+    //Comprobar los 2 datos que me envía el usuario (La contraseña repetida)
+    if(req.body.password!==req.body.confirmPassword){
+        return next(new ErrorHandler("Contraseñas no coinciden",400))
+    }
+
+    //Cambiar la contraseña
+    user.clave= req.body.password;
+    user.resetPasswordToken=undefined;
+    user.resetPasswordExpire=undefined;
+
+    await user.save(); //Guardo La nueva contraseña
+    tokenEnviado(user, 200, res) //Respuesta
 })
 
 

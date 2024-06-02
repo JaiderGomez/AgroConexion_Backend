@@ -70,6 +70,8 @@ const usersSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date
 
 
 });
@@ -98,12 +100,13 @@ usersSchema.methods.getJwtToken = function () {
 
 //Generar un token para reset de contraseña
 usersSchema.methods.genResetPasswordToken = function () {
-    const resetToken= crypto.randomBytes(20).toString('hex')
+    const resetToken= crypto.randomBytes(20).toString('hex') //Creación del token
 
-    //Hashear y setear resetToken
-    this.resetPasswordToken= crypto.createHash("sha256").update(resetToken).digest('hex')
+    //Encriptar y cambiar resetToken
 
-    //Setear fecha de expiración del token
+    this.resetPasswordToken=crypto.createHash("sha256").update(resetToken).digest('hex');
+
+    //Cambiar fecha de expiración del token
     this.resetPasswordExpire= Date.now() + 30*60*1000 //el token dura solo 30 min
 
     return resetToken
