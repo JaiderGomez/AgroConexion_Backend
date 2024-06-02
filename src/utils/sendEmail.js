@@ -5,12 +5,12 @@ const sendEmail = async options =>{
         host: "smtp.office365.com",
         port: 587,
         auth: {
-          user: "",
-          pass: ""
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASS
         }
       });
     const mensaje={
-        from: "AgroConexión ",
+        from: `AgroConexión ${process.env.EMAIL_USERNAME}`,
         to: options.email,
         subject: options.subject,
         text: options.mensaje

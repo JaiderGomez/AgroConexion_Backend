@@ -83,7 +83,7 @@ usersSchema.pre("save", async function (next) {
     this.clave = await bcrypt.hash(this.clave, 10)
 });
 
-//Decodifico contraseñas y comparamos
+//Decodifico contraseñas y comparo
 usersSchema.methods.compararPass = async function (passDada){
     return await bcrypt.compare(passDada, this.clave)
 };

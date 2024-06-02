@@ -2,6 +2,7 @@ const usuarios = require("../models/usersModel");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler=require("../utils/errorHandler");
 const tokenEnviado = require("../utils/jwtToken");
+const sendEmail=require("../utils/sendEmail");
 
 //Crear un usuarios
 exports.newUsers=catchAsyncErrors(async (req, res, next) => {
@@ -146,7 +147,7 @@ exports.forgotPassword = catchAsyncErrors ( async( req, res, next) =>{
     try{
         await sendEmail({
             email:user.email,
-            subject: "VetyShop Recuperación de la contraseña",
+            subject: "AgroConexión Recuperación de contraseña",
             mensaje
         })
         res.status(200).json({
