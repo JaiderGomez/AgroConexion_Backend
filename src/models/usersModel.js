@@ -70,8 +70,8 @@ const usersSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    resetPasswordToken: String,
-    resetPasswordExpire: Date
+    resetPasswordToken: {type: String},
+    resetPasswordExpire: {type: Date}
 
 
 });
@@ -82,7 +82,7 @@ usersSchema.pre("save", async function (next) {
     if (!this.isModified("clave")) {
         next()
     }
-    this.clave = await bcrypt.hash(this.clave, 10)
+    this.clave = await bcrypt.hash(this.clave, 8)
 });
 
 //Decodifico contraseñas y comparo

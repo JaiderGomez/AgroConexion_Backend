@@ -9,7 +9,11 @@ const crypto = require("crypto");
 exports.newUsers=catchAsyncErrors(async (req, res, next) => {
     const newUser = await usuarios.create(req.body);
     
-    tokenEnviado(newUser,201,res)
+    res.status(201).json({
+        success:true,
+        message:"usuario creado correctamente por favor inicie sesión",
+        newUser
+    })
 });
 
 //consultar todos los usuarios
