@@ -8,9 +8,9 @@ const {getUsuarios, newUsers, getUsuario, getUserRol, updateUsers, deleteUser, l
 const {isAuthenticatedUser, authorizeRoles} = require("../middleware/privacidad");
 
 
-router.get("/usuarios",isAuthenticatedUser, authorizeRoles("admin"), getUsuarios) //Consultar todos los usuarios
+router.get("/usuarios", getUsuarios) //Consultar todos los usuarios //isAuthenticatedUser, authorizeRoles("admin")
       .post("/crearUsuario", newUsers) //crear un nuevo usuario
-      .get("/usuario/:id", isAuthenticatedUser, getUsuario) // Consultar usuario por ID
+      .get("/usuario", isAuthenticatedUser, getUsuario) // Consultar usuario por ID
       .patch("/usuario/:id", isAuthenticatedUser, updateUsers) //Actualizar usuario
       .get("/usuarios/:rol", isAuthenticatedUser, authorizeRoles("admin"), getUserRol)// Consultar Usuarios por rol
       .delete("/usuario/:id", isAuthenticatedUser, authorizeRoles("admin"), deleteUser)// Eliminar Usuario

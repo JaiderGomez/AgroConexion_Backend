@@ -55,7 +55,7 @@ const usersSchema = new mongoose.Schema({
 
     },
     fecha_de_nacimiento:{
-        type:Date
+        type:Date,
     },
     fecha_de_registro:{
         type:Date,
@@ -82,7 +82,7 @@ usersSchema.pre("save", async function (next) {
     if (!this.isModified("clave")) {
         next()
     }
-    this.clave = await bcrypt.hash(this.clave, 8)
+    this.clave = await bcrypt.hash(this.clave, 10)
 });
 
 //Decodifico contraseñas y comparo

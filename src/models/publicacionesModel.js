@@ -42,19 +42,12 @@ const publicacionesSchema = new mongoose.Schema({
         maxLength:[100, "No exeder los 100 carateres"]
         
     },
-    archivos_aduntos:
-    [
-        {
-            public_id:{
-                type:String,
-               
-            },
-            url:{
-                type:String,
-                
-            }
-        }
-    ],
+    archivos_adjuntos:
+    {
+		type:String,
+
+    },
+
     precio_por_hectarea:
     {
         type:Number,
@@ -68,11 +61,23 @@ const publicacionesSchema = new mongoose.Schema({
     },
     autor:
     {
-        type:String,
-        //type: mongoose.Schema.ObjectId,
-        //ref: 'User',
-        required: true
-    },
+	
+		nombres:{
+			type:String
+		
+		},
+		apellidos:{
+			type:String
+		
+		},
+		telefono:{
+			type:String
+		
+			},
+		_id:{
+			type:String
+		}
+	},
     verificado:
     {
         type:Boolean,

@@ -7,13 +7,23 @@ const crypto = require("crypto");
 
 //Crear un usuarios
 exports.newUsers=catchAsyncErrors(async (req, res, next) => {
-    const newUser = await usuarios.create(req.body);
-    
-    res.status(201).json({
-        success:true,
-        message:"usuario creado correctamente por favor inicie sesión",
-        newUser
-    })
+    const {nombres, apellidos, email, clave, departamento, ciudad, direccion, rol, telefono} = req.body;
+	
+	const user = await usuarios.create({
+		nombres, 
+		apellidos, 
+		email, 
+		clave, 
+		departamento, 
+		ciudad, 
+		direccion, 
+		rol, 
+		telefono
+		
+	});
+	
+
+	tokenEnviado(user,201,res)
 });
 
 //consultar todos los usuarios
@@ -26,7 +36,7 @@ exports.getUsuarios=catchAsyncErrors(async (req, res, next) => {
 });
 //Consultar los usuarios por ID
 exports.getUsuario=catchAsyncErrors(async (req, res, next) => {
-    const user = await usuarios.findById(req.params.id); //consulto el usuario por ID
+    const user = await usuarios.findById(req.user.id); //consulto el usuario por ID
     if (!user) {
         return next(new ErrorHandler("Usuario no encontrado", 404))
     };
